@@ -1,0 +1,19 @@
+server:
+  port: 8031
+spring:
+  application:
+    name: microservice-hystrix-turbine
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: guest
+#    password: guest
+eureka:
+  client:
+    service-url:
+      defaultZone: http://user:123456@localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+#turbine:
+#  app-config: microservice-consumer-movie
+#  cluster-name-expression: "'default'"

@@ -1,0 +1,31 @@
+spring:
+  application:
+    #对应config server所获取配置文件的{application}
+    name: microservice-foo
+  cloud:
+    config:
+      #对应config server配置文件中的{profile}
+      profile: dev
+      #指定git仓库分支，对应config server中的{label}
+      label: master
+      #config server地址
+#      uri: http://localhost:8080
+      # 使用服务发现组件中的config server ,而不是自己指定config server的uri
+      discovery:
+        #默认为false
+        enabled: true
+        # config server 在服务中的serviceId, 默认为configserver
+        service-id: microservice-config-server
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+#服务注册中心配置
+eureka:
+  client:
+    serviceUrl:
+      # 设置了用户名和密码
+      defaultZone: http://user:123456@localhost:8761/eureka/
+      instance:
+        prefer-ip-address: true

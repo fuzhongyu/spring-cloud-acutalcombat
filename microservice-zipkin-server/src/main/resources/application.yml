@@ -1,0 +1,19 @@
+server:
+  port: 9411
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+zipkin:
+  #配置zipkin将数据存储到elasticsearch，默认是存储在内存中的
+  type: elasticsearch
+  elasticsearch:
+    cluster: elasticsearch
+    hosts: http://localhost:9200
+    index: zipkin
+    index-shards: 5
+    index-replicas: 1
+

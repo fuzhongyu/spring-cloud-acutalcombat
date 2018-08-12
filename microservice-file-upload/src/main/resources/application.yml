@@ -1,0 +1,17 @@
+server:
+  port: 8050
+spring:
+  application:
+    name: microservice-file-upload
+  http:
+    multipart:
+      max-file-size: 2000Mb
+      max-request-size: 2500Mb
+eureka:
+  client:
+    serviceUrl:
+      #设置eureka server交互地址，多个可以用逗号分隔
+      defaultZone: http://user:123456@localhost:8761/eureka/
+    #开启该属性可以将客户端中的健康属性传递到eureka server，从而得到各端点的健康状态
+    healthcheck:
+      enabled: true

@@ -1,0 +1,59 @@
+server:
+  port: 8000
+spring:
+ jpa:
+   generate-ddl: false
+   show-sql: true
+   hibernate:
+     ddl-auto: none
+ datasource:
+   platform: h2
+   schema: classpath:sql/schema.sql
+   data: classpath:sql/data.sql
+  #由于使用了自定义的logback-spring.xml并且该文件含有springAppName,所以application.name必须设置在bootstrap.yml中，否则logback-spring.xml将无法读取到
+# application:
+#   name: microservice-provider-user
+ #zipkin配置
+# zipkin:
+#   base-url: http://localhost:9411
+ sleuth:
+  sampler:
+    #指定采样请求的百分比，默认为0.1,因为在分布式系统中，数据量可能会非常大，因此采样非常重要
+    percentage: 1.0
+ # mq配置
+ rabbitmq:
+   host: localhost
+   port: 5672
+   username: guest
+   password: guest
+
+logging:
+  level:
+    root: info
+    org.hibernate: info
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.hibernate.type.descriptor.sql.BasicExtractor: trace
+    #sleuth使用
+    org.springframework.web.servlet.DispatcherServlet: debug
+
+#定义公开数据，这样就可以通过/actuator/info 获取到这些自定义的属性
+info:
+    name: @project.artifactId@
+    java:
+      source: @java.version@
+
+#服务注册中心配置
+eureka:
+  client:
+    serviceUrl:
+      # eureka设置了用户名和密码
+       defaultZone: http://user:123456@localhost:8761/eureka/
+      # eureka高可用配置
+#      defaultZone: http://peer1:8761/eureka/,http://peer2:8762/eureka/
+  instance:
+    #表示将自己的ip注册到eureka server， 如果不配改属性将设置为false,表示注册微服务所在操作系统的hostname到eureka server
+    prefer-ip-address: true
+    #自定义元数据
+    metadata-map:
+      # key和value可以随便写
+      my-metadata: 我的自定义元数据

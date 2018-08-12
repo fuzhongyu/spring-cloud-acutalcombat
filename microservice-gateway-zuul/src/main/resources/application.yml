@@ -1,0 +1,59 @@
+server:
+  port: 8040
+eureka:
+  client:
+    serviceUrl:
+      #设置eureka server交互地址，多个可以用逗号分隔
+      defaultZone: http://user:123456@localhost:8761/eureka/
+    #开启该属性可以将客户端中的健康属性传递到eureka server，从而得到各端点的健康状态
+    healthcheck:
+      enabled: true
+spring:
+  application:
+    name: microservice-gateway-zuul
+#网关路由配置
+zuul:
+  #路由前缀配置,这样配置访问网关：http://localhost:8040/user/consumer/1 相当于访问：http://localhost:8040/microservice-consumer-movie/user/1 （注意user位置）
+#  prefix: /user
+#  strip-prefix: false
+  routes:
+    #配置1： 这样配置访问网关http://localhost:8040/user/user/1来访问（其中第一个user为别名可以任意定义），相当于访问：http://localhost:8040/microservice-consumer-movie/user/1
+#    microservice-consumer-movie: /user/**
+    #配置2：配置strip-prefix后，相当于原来的对应关系，/user对应/microservice-consumer-movie,变为/user对应/microservice-consumer-movie/user
+    microservice-consumer-movie:
+      path: /user/**
+#      strip-prefix: false
+    #敏感头信息配置
+    sensitive-headers: Cookie,Set-Cookie,Authorization
+    #配置3：这边的consumer-routes只是给路由一个名称，可以任意起名字
+#    consumer-routes:
+#    service-id: microservice-consumer-movie
+#    path: /consumer/**
+    #1.文件上传配置,对于小于10M的文件可直接用这个，即http://localhost:8040/upload/upload_file，如果大于10M则需要在访问路径上加zuul,即http://localhost:8040/zuul/upload/upload_file
+    #2.如果是是大文件，且zuul使用了ribbon做负载均衡，需要提升超时设置，见下(超时设置)
+    microservice-file-upload:
+      path: /upload/**
+      strip-prefix: false
+  #忽略的服务，多个用，隔开，使用* 可忽略全部
+#  ignored-services: microservice-provider-user
+  #忽略所有包含/admin的路径
+  ignored-patterns: /**/admin/**
+  #这样设置后Header1和Header2将不会传播到其他服务中，当使用spring security时憨厚默认值，Pragma,Cache-Control,X-Frame-options,X-content-Type-Options,X-Xss-Protection,Expires,这个时候如果需要使用这些参数可以设置false
+  ignored-headers: Header1,Header2
+  #禁用PreRequestLogFilter过滤器，语法： zuul.<过滤器名>.<过滤器类型>.disable=true, 禁用true,不禁用-false
+  PreRequestLogFilter:
+    pre:
+      disable: false
+
+
+#---超时设置--
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:
+  connectTimeout: 3000
+  readTimeout: 60000

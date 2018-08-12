@@ -1,0 +1,43 @@
+server:
+  port: 8000
+spring:
+ jpa:
+   generate-ddl: false
+   show-sql: true
+   hibernate:
+     ddl-auto: none
+ datasource:
+   platform: h2
+   schema: classpath:sql/schema.sql
+   data: classpath:sql/data.sql
+ application:
+   name: microservice-provider-user
+logging:
+  level:
+    root: info
+    org.hibernate: info
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.hibernate.type.descriptor.sql.BasicExtractor: trace
+
+#定义公开数据，这样就可以通过/actuator/info 获取到这些自定义的属性
+info:
+    name: @project.artifactId@
+    java:
+      source: @java.version@
+
+#服务注册中心配置
+eureka:
+  client:
+    serviceUrl:
+      # eureka设置了用户名和密码
+       defaultZone: http://user:123456@localhost:8761/eureka/
+      # eureka高可用配置
+#      defaultZone: http://peer1:8761/eureka/,http://peer2:8762/eureka/
+  instance:
+    #表示将自己的ip注册到eureka server， 如果不配改属性将设置为false,表示注册微服务所在操作系统的hostname到eureka server
+    prefer-ip-address: true
+    #自定义元数据
+    metadata-map:
+      # key和value可以随便写
+      my-metadata: 我的自定义元数据
+

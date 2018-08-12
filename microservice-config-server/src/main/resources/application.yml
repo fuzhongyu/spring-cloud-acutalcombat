@@ -1,0 +1,58 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: microservice-config-server
+  cloud:
+    config:
+      server:
+        git:
+          #配置git仓库地址
+          uri: https://github.com/fuzhongyu/spring-cloud-config-repo
+          #用户名
+#          username:
+          #密码
+#          password:
+          #搜索的子目录,多个子目录用,隔开
+#          search-paths: config-repo
+          #配置启动时加载配置文件内容，默认是第一次请求的时候才会去加载
+#          repos:
+#            # team-a可以为任意名字
+#            team-a:
+#              pattern: microservice-*
+#              clone-on-start: true
+#              uri: https://github.com/fuzhongyu/spring-cloud-config-repo
+        # 设置健康指示器
+        health:
+          #禁用
+#          enabled: false
+          repositories:
+            #a-foo 可以为任意名字
+            a-foo:
+              name: microservice-foo
+              proiles: dev
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+#对配置设置加密，不过这一步需要jce支持，用jce的两个文件替换jdk/jre/lib/security 下的这两个文件
+#encrypt:
+#  #密钥
+#  key: 123456
+#logging:
+#  level:
+#    org.springframework.cloud: debug
+#    org.springframework.boot: debug
+
+#服务注册中心配置
+eureka:
+  client:
+    serviceUrl:
+      # 设置了用户名和密码
+      defaultZone: http://user:123456@localhost:8761/eureka/
+      instance:
+        prefer-ip-address: true
+
+
+
